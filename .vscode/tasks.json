@@ -72,6 +72,77 @@
 					"message": 5
                 }
             }
-        }
+        },
+        {
+            "label": "make-test",
+            "type": "shell",
+            "command": "${workspaceRoot}/mingw-w64.bat",
+            "args": [
+                // Ask msbuild to generate full paths for file names.
+                "/c",
+                "make",
+                "debug",
+                "-n",
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}/result/bin/Debug"
+            },
+            "group": "build",
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "always"
+            },
+            // Use the standard MS compiler pattern to detect errors, warnings and infos
+            "problemMatcher": {
+                "owner": "gcc",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceRoot}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "make-clean",
+            "type": "shell",
+            "command": "${workspaceRoot}/mingw-w64.bat",
+            "args": [
+                // Ask msbuild to generate full paths for file names.
+                "/c",
+                "make",
+                "clean"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}/result/bin/Debug"
+            },
+            "group": "build",
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "always"
+            },
+            // Use the standard MS compiler pattern to detect errors, warnings and infos
+            "problemMatcher": {
+                "owner": "gcc",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceRoot}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
     ]
 }
