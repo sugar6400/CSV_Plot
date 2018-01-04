@@ -1,0 +1,77 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-debug",
+            "type": "shell",
+            "command": "${workspaceRoot}/mingw-w64.bat",
+            "args": [
+                // Ask msbuild to generate full paths for file names.
+                "/c",
+                "make",
+                "debug"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}/result/bin/Debug"
+            },
+            "group": "build",
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "always"
+            },
+            // Use the standard MS compiler pattern to detect errors, warnings and infos
+            "problemMatcher": {
+                "owner": "gcc",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceRoot}"
+                ],
+                "pattern":{
+					"regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+					"file": 1,
+					"line": 2,
+					"column": 3,
+					"severity": 4,
+					"message": 5
+                }
+            }
+        },
+        {
+            "label": "build-release",
+            "type": "shell",
+            "command": "${workspaceRoot}/mingw-w64.bat",
+            "args": [
+                // Ask msbuild to generate full paths for file names.
+                "/c",
+                "make",
+                "release"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}/result/bin/Release"
+            },
+            "group": "build",
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "always"
+            },
+            // Use the standard MS compiler pattern to detect errors, warnings and infos
+            "problemMatcher": {
+                "owner": "gcc",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceRoot}"
+                ],
+                "pattern":{
+					"regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+					"file": 1,
+					"line": 2,
+					"column": 3,
+					"severity": 4,
+					"message": 5
+                }
+            }
+        }
+    ]
+}
