@@ -14,51 +14,54 @@ CsvData::CsvData() { filename = NULL; }
 
 CsvData::~CsvData() {}
 
-void CsvData::load(char* in_filename) {
+// CSVÇì«Ç›çûÇﬁ
+bool CsvData::load(char* in_filename) {
     fstream ifs(in_filename);
     string line;
     string buf;
-    int max_x = 0, max_y = 0;
-    int min_x = 0, min_y = 0;
+    max_x = INT_MIN, max_y = INT_MIN;
+    min_x = INT_MAX, min_y = INT_MAX;
     if (ifs.fail()) {
-        cerr << "„Éï„Ç°„Ç§„É´„Ç™„Éº„Éó„É≥„Ç®„É©„Éº";
-        return;
+        printf("ÉtÉ@ÉCÉãÉIÅ[ÉvÉìÉGÉâÅ[:%s\n", in_filename);
+        return false;
     }
-    //ÂêÑË°å„Åß
+    //äeçsÇ≈
     while (getline(ifs, line)) {
+        //ÉRÉÅÉìÉgçsÇÕì«Ç›îÚÇŒÇ∑
+        if (line.c_str()[0] == '#') continue;
         Data new_data;
         stringstream ss(line);
 
-        //„Ç´„É≥„ÉûÂå∫Âàá„Çä„Åß2„Å§Ë™≠„ÅøËæº„ÇÄ
+        //ÉJÉìÉ}ãÊêÿÇËÇ≈2Ç¬ì«Ç›çûÇﬁ
         getline(ss, buf, ',');
-        new_data.x = stoi(buf);
+        new_data.x = stod(buf);
         getline(ss, buf, ',');
-        new_data.y = stoi(buf);
+        new_data.y = stod(buf);
 
-        //ÊúÄÂ§ßÂÄ§, ÊúÄÂ∞èÂÄ§„ÇíÊõ¥Êñ∞
+        //ç≈ëÂíl, ç≈è¨ílÇçXêV
         if (new_data.x > max_x) max_x = new_data.x;
         if (new_data.y > max_y) max_y = new_data.y;
         if (new_data.x < min_x) min_x = new_data.x;
         if (new_data.y < min_y) min_y = new_data.y;
 
-        //„Éá„Éº„Çø„É™„Çπ„Éà„Å´ËøΩÂä†
+        //ÉfÅ[É^ÉäÉXÉgÇ…í«â¡
         data.push_back(new_data);
     }
-    //„Éá„Éº„Çø„ÅÆÂ≠òÂú®„Åô„ÇãÂπÖ„Å®È´ò„Åï„ÇíÊåáÂÆö
-    width = max_x - min_x;
-    height = max_y - min_y;
+    //ÉfÅ[É^ÇÃë∂ç›Ç∑ÇÈïùÇ∆çÇÇ≥ÇéwíË
 
-    //„Éï„Ç°„Ç§„É´Âêç„ÇíË®òÈå≤
+    //ÉtÉ@ÉCÉãñºÇãLò^
     filename = in_filename;
+    return true;
 }
 
+//ëSóvëfÇèoóÕ
 void CsvData::print() {
     unsigned int i;
     if (filename != NULL) {
         cout << "File:" << filename << endl;
         cout << "size:" << data.size() << endl;
         for (i = 0; i < data.size(); i++) {
-            printf("%d: %d, %d\n", i, data[i].x, data[i].y);
+            printf("%d: %.3lf, %.3lf\n", i, data[i].x, data[i].y);
         }
     }
 }

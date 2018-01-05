@@ -4,8 +4,8 @@
 
 // 1点のデータ
 struct Data {
-    int x;
-    int y;
+    double x;
+    double y;
 };
 
 // CSVから読み込んだデータ
@@ -13,18 +13,21 @@ class CsvData {
    public:
     CsvData();
     ~CsvData();
-    void load(char* filename);
+    bool load(char* filename);
     void print();
     void sort();
     char* getFileName() { return filename; }
-    int getDataWidth() { return width; }
-    int getDataHeight() { return height; }
-    int getDataNum() { return data.size(); }
+    double getDataWidth() { return max_x - min_x; }
+    double getDataHeight() { return max_y - min_y; }
+    double getMin_x() { return min_x; }
+    double getMin_y() { return min_y; }
+    double getDataNum() { return data.size(); }
     Data* get_data(int index) { return &data[index]; }
 
    private:
     char* filename;
     //データリスト
     std::vector<Data> data;
-    int width, height;
+    double max_x, max_y;
+    double min_x, min_y;
 };

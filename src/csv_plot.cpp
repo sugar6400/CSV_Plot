@@ -14,20 +14,19 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // csvã‚’èª­ã¿è¾¼ã‚€
-    csv_data.load(argv[1]);
-    //èª­ã¿è¾¼ã‚“ã csvã®ç¢ºèª
-    csv_data.print();
-    //ãƒ‡ãƒ¼ã‚¿ã‚’xã§ã‚½ãƒ¼ãƒˆ
-    csv_data.sort();
-    printf("Sorted\n");
-    //ã‚½ãƒ¼ãƒˆã—ãŸcsvã®ç¢ºèª
-    csv_data.print();
+    // csv‚ğ“Ç‚İ‚Ş
+    if (csv_data.load(argv[1])) {
+        //“Ç‚İ‚ñ‚¾csv‚ÌŠm”F
+        csv_data.print();
+        printf("loaded\n");
+        //ƒf[ƒ^‚ğx‚Åƒ\[ƒg
+        csv_data.sort();
 
-    // pbmãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆ
-    pbm_creator.plot(&csv_data);
-
-    pbm_creator.output_P4();
+        // pbmƒtƒ@ƒCƒ‹‚ğì¬
+        pbm_creator.plot(&csv_data);
+        // pbmƒtƒ@ƒCƒ‹‚ğo—Í
+        pbm_creator.output_P4();
+    }
 
     getchar();
 

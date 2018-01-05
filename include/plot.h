@@ -18,12 +18,15 @@ class PBM_Creator {
    private:
     void set_black(int x, int y);
     void set_white(int x, int y);
-    void dot(int x, int y);
-    void dot(Data data);
-    void draw_line(CsvData* csv_data, int s_index);
+    void dot(int x, int y, int size);
+    void dot(Data data, int size);
+    void draw_line(CsvData* csv_data, int s_index, int line_size, bool put_dot);
+    void draw_line(Data data1, Data data2, int line_size, bool put_dot);
     void mid_point();
     std::string filename;
     std::vector<std::vector<char>> pixels;
     int width, height;
-    int rawW, rawH;
+    int w_margin, h_margin;
+    double dataW, dataH;
+    double biasX, biasY;
 };
