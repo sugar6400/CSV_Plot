@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include "bitmap.h"
 #include "const.h"
 #include "string.h"
 
@@ -17,7 +18,7 @@ PBM_Creator::PBM_Creator(int i_width, int i_height) {
 
 PBM_Creator::~PBM_Creator() {}
 
-//ãƒ‡ãƒ¼ã‚¿ã‚’ã‚‚ã¨ã«ã‚°ãƒ©ãƒ•ã‚’æã
+//ƒf[ƒ^‚ğ‚à‚Æ‚ÉƒOƒ‰ƒt‚ğ•`‚­
 void PBM_Creator::plot(CsvData *csv_data) {
     Data s_axisX, e_axisX;
     Data s_axisY, e_axisY;
@@ -26,20 +27,20 @@ void PBM_Creator::plot(CsvData *csv_data) {
     double y_span;
     double min_x = csv_data->getMin_x();
     double min_y = csv_data->getMin_y();
-    //å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã®åå‰ã‚’è¨­å®šã™ã‚‹
+    //o—Íƒtƒ@ƒCƒ‹‚Ì–¼‘O‚ğİ’è‚·‚é
     filename += csv_data->getFileName();
-    //.csvã‚’.pbmã«ç½®ãæ›ãˆ
+    //.csv‚ğ.pbm‚É’u‚«Š·‚¦
     split = filename.find(".csv");
     filename.replace(split, strlen(".csv"), ".pbm");
 
-    //ãƒ‡ãƒ¼ã‚¿ç¯„å›²ã‚’è¨˜éŒ²
+    //ƒf[ƒ^”ÍˆÍ‚ğ‹L˜^
     dataW = csv_data->getDataWidth();
     dataH = csv_data->getDataHeight();
-    //è² ã®è¦ç´ ã‚’é™¤ããŸã‚ã®ãƒã‚¤ã‚¢ã‚¹
+    //ƒ}ƒCƒiƒX‚Ì—v‘f‚ğœ‚­‚½‚ß‚ÌƒoƒCƒAƒX
     biasX = -min_x;
     biasY = -min_y;
 
-    //ä½™ç™½ã‚’è¨ˆç®—
+    //—]”’‚ğŒvZ
     if (biasX < 0 && -biasX * width / dataW > DEF_MARGIN) {
         w_margin = -biasX * width / dataW;
     } else {
@@ -52,29 +53,29 @@ void PBM_Creator::plot(CsvData *csv_data) {
     }
 
     cout << "output pbm file: " << filename << endl;
-    //ãã‚Œãã‚Œã®ç‚¹ã‚’çµã¶
+    //‚»‚ê‚¼‚ê‚Ì“_‚ğŒ‹‚Ô
     int i;
     for (i = 0; i < csv_data->getDataNum() - 1; i++) {
         draw_line(csv_data, i, DEF_LINE_SIZE, true);
     }
-    //çµ‚ç‚¹ã«ç‚¹ã‚’æ‰“ã¤
+    //I“_‚É“_‚ğ‘Å‚Â
     dot(resize(*csv_data->get_data(i)), DATA_POINT_SIZE);
 
-    // xè»¸ã®è¨­å®š
+    // x²‚Ìİ’è
     s_axisX.x = -biasX - (w_margin)*dataW / width;
     e_axisX.x = -biasX + dataW + (w_margin)*dataW / width;
     s_axisX.y = 0;
     e_axisX.y = 0;
 
-    // yè»¸ã®è¨­å®š
+    // y²‚Ìİ’è
     s_axisY.x = 0;
     e_axisY.x = 0;
     s_axisY.y = -biasY - (h_margin)*dataH / height;
     e_axisY.y = -biasY + dataH + (h_margin)*dataH / height;
 
-    // xè»¸ã‚’å¼•ã
+    // x²‚ğˆø‚­
     draw_line(s_axisX, e_axisX, DEF_AXIS_SIZE, false);
-    // yè»¸ã‚’å¼•ã
+    // y²‚ğˆø‚­
     draw_line(s_axisY, e_axisY, DEF_AXIS_SIZE, false);
 
     x_span = getSpan(dataW);
@@ -89,7 +90,7 @@ void PBM_Creator::plot(CsvData *csv_data) {
     }
 }
 
-//ãƒ†ã‚­ã‚¹ãƒˆå½¢å¼PBMã§å‡ºåŠ›
+//ƒeƒLƒXƒgŒ`®PBM‚Åo—Í
 void PBM_Creator::output_P1() {
     int x, y;
     FILE *fp = fopen(filename.c_str(), "w");
@@ -97,11 +98,11 @@ void PBM_Creator::output_P1() {
         printf("can't open file: %s", filename.c_str());
         return;
     }
-    //ãƒ˜ãƒƒãƒ€å‡ºåŠ›
+    //ƒwƒbƒ_o—Í
     fprintf(fp, "P1\n");
     fprintf(fp, "%u %u\n", width, height);
 
-    //ç”»åƒãƒ‡ãƒ¼ã‚¿å‡ºåŠ›
+    //‰æ‘œƒf[ƒ^o—Í
     for (y = 0; y < height; y++) {
         for (x = 0; x < width; x++) {
             putc('0' + pixels[y][x], fp);
@@ -111,7 +112,7 @@ void PBM_Creator::output_P1() {
     fclose(fp);
 }
 
-//ãƒã‚¤ãƒŠãƒªå½¢å¼PBMã§å‡ºåŠ›
+//ƒoƒCƒiƒŠŒ`®PBM‚Åo—Í
 void PBM_Creator::output_P4() {
     int x, y;
     uint8_t pix8;
@@ -121,16 +122,16 @@ void PBM_Creator::output_P4() {
         printf("can't open file: %s", filename.c_str());
         return;
     }
-    //ãƒ˜ãƒƒãƒ€å‡ºåŠ›
+    //ƒwƒbƒ_o—Í
     fprintf(fp, "P4\n");
     fprintf(fp, "%u %u\n", width, height);
 
-    //ç”»åƒãƒ‡ãƒ¼ã‚¿å‡ºåŠ›
+    //‰æ‘œƒf[ƒ^o—Í
     for (y = 0; y < height; y++) {
         shift = 8;
         pix8 = 0;
         for (x = 0; x < width; x++) {
-            // 1byteåˆ†ãšã¤ä¿å­˜
+            // 1byte‚¸‚Â•Û‘¶
             --shift;
             pix8 |= pixels[y][x] << shift;
             if (shift == 0) {
@@ -139,7 +140,7 @@ void PBM_Creator::output_P4() {
                 pix8 = 0;
             }
         }
-        // 8bitã¾ã§ã„ã‹ãªãã¦ã‚‚xçµ‚ç«¯ã¾ã§è¡Œã£ãŸã‚‰å‡ºåŠ›
+        // 8bit‚Ü‚Å‚¢‚©‚È‚­‚Ä‚àxI’[‚Ü‚Ås‚Á‚½‚ço—Í
         if (shift != 8) {
             putc(pix8, fp);
         }
@@ -147,7 +148,7 @@ void PBM_Creator::output_P4() {
     fclose(fp);
 }
 
-//ãƒ‡ãƒ¼ã‚¿ã‚’ç”»åƒã®ã‚µã‚¤ã‚ºã«æ­£è¦åŒ–
+//ƒf[ƒ^‚ğ‰æ‘œ‚ÌƒTƒCƒY‚É³‹K‰»
 Data PBM_Creator::resize(Data data) {
     Data ret;
     ret.x = (width - 1 - w_margin * 2) * (data.x + biasX) / dataW + w_margin;
@@ -158,13 +159,13 @@ Data PBM_Creator::resize(Data data) {
 double PBM_Creator::getSpan(double base) {
     double shift;
 
-    // shiftã®æ¡åˆã‚ã›
+    // shift‚ÌŒ…‡‚í‚¹
     for (shift = 1; base / shift < 10; shift /= 10) {
         printf("shift1\n");
     }
     for (; base / shift >= 100; shift *= 10) {
     }
-    //ãŠãŠã‚ˆã10splitã«ãªã‚‹ã‚ˆã†ã«
+    //‚¨‚¨‚æ‚»10split‚É‚È‚é‚æ‚¤‚É
     for (; base / shift < 10; shift /= 2) {
     }
     for (; base / shift > 10; shift *= 2) {
@@ -182,10 +183,10 @@ void PBM_Creator::set_white(int x, int y) {
         pixels[height - y][x] = WHITE;
 }
 
-//ç‚¹ã‚’æ‰“ã¤
+//“_‚ğ‘Å‚Â
 void PBM_Creator::dot(int x, int y, int size) {
     int dx, dy;
-    // size x sizeã®æ­£æ–¹å½¢
+    // size x size‚Ì³•ûŒ`
     for (dx = -size / 2; dx <= size / 2; dx++) {
         for (dy = -size / 2; dy <= size / 2; dy++) {
             set_black(x + dx, y + dy);
@@ -199,16 +200,16 @@ void PBM_Creator::draw_line(Data data1, Data data2, int line_size,
                             bool put_dot) {
     bool xy_swapped;
 
-    //ãƒ‡ãƒ¼ã‚¿ã®æ­£è¦åŒ–
+    //ƒf[ƒ^‚Ì³‹K‰»
     data1 = resize(data1);
     data2 = resize(data2);
 
     if (put_dot) {
-        //å§‹ç‚¹ã«ç‚¹ã‚’æ‰“ã¤
+        //n“_‚É“_‚ğ‘Å‚Â
         dot(data1.x, data1.y, DATA_POINT_SIZE);
     }
 
-    //åˆæœŸè¨­å®š
+    //‰Šúİ’è
     int dx = abs(data2.x - data1.x);
     int dy = abs(data2.y - data1.y);
     int i1, i2, d, x, y;
@@ -217,24 +218,24 @@ void PBM_Creator::draw_line(Data data1, Data data2, int line_size,
     x = data1.x;
     y = data1.y;
     if (dy > dx) {
-        //å‚¾ããŒ45åº¦ã‚ˆã‚Šå¤§ãã„æ™‚ã¯x,yã‚’äº¤æ›
+        //ŒX‚«‚ª45“x‚æ‚è‘å‚«‚¢‚Éx,y‚ğŒğŠ·
         xy_swapped = true;
         d = 2 * dx - dy;
         i1 = 2 * dx;
         i2 = 2 * (dx - dy);
-        //å¢—åŠ ã®æ–¹å‘ã‚’æ±ºã‚ã‚‹
+        //‘‰Á‚Ì•ûŒü‚ğŒˆ‚ß‚é
         if (data1.y < data2.y) {
             dir = 1;
         } else {
             dir = -1;
         }
     } else {
-        //å‚¾ããŒ45åº¦ã‚ˆã‚Šå°ã•ã„æ™‚ã¯ãã®ã¾ã¾
+        //ŒX‚«‚ª45“x‚æ‚è¬‚³‚¢‚Í‚»‚Ì‚Ü‚Ü
         xy_swapped = false;
         d = 2 * dy - dx;
         i1 = 2 * dy;
         i2 = 2 * (dy - dx);
-        //å¢—åŠ ã®æ–¹å‘ã‚’æ±ºã‚ã‚‹
+        //‘‰Á‚Ì•ûŒü‚ğŒˆ‚ß‚é
         if (data1.y < data2.y) {
             dir = 1;
         } else {
@@ -243,7 +244,7 @@ void PBM_Creator::draw_line(Data data1, Data data2, int line_size,
     }
 
     if (xy_swapped) {
-        // yã‚’ãšã‚‰ã—ãªãŒã‚‰xã‚’æ±ºã‚ã‚‹
+        // y‚ğ‚¸‚ç‚µ‚È‚ª‚çx‚ğŒˆ‚ß‚é
         while (true) {
             dot(x, y, line_size);
             if (y == (int)data2.y) break;
@@ -256,7 +257,7 @@ void PBM_Creator::draw_line(Data data1, Data data2, int line_size,
             }
         }
     } else {
-        // xã‚’ãšã‚‰ã—ãªãŒã‚‰yã‚’æ±ºã‚ã‚‹
+        // x‚ğ‚¸‚ç‚µ‚È‚ª‚çy‚ğŒˆ‚ß‚é
         while (true) {
             dot(x, y, line_size);
             if (x == (int)data2.x) break;
@@ -271,10 +272,10 @@ void PBM_Creator::draw_line(Data data1, Data data2, int line_size,
     }
 }
 
-// xã‚’åŸºæº–ã«ã‚½ãƒ¼ãƒˆã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã‚’ã‚‚ã¨ã«ç·šã‚’æã
+// x‚ğŠî€‚Éƒ\[ƒg‚³‚ê‚½ƒf[ƒ^‚ğ‚à‚Æ‚Éü‚ğ•`‚­
 void PBM_Creator::draw_line(CsvData *csv_data, int s_index, int line_size,
                             bool put_dot) {
-    // s_indexã¨ãã®æ¬¡ã®ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã—ç·šã‚’å¼•ã
+    // s_index‚Æ‚»‚ÌŸ‚Ìƒf[ƒ^‚ğæ“¾‚µü‚ğˆø‚­
     draw_line(*csv_data->get_data(s_index), *csv_data->get_data(s_index + 1),
               line_size, put_dot);
 }
