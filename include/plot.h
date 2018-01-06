@@ -16,12 +16,15 @@ class PBM_Creator {
     int getHeight() { return height; }
 
    private:
+    double getSpan(double base);
     void set_black(int x, int y);
     void set_white(int x, int y);
     void dot(int x, int y, int size);
     void dot(Data data, int size);
     void draw_line(CsvData* csv_data, int s_index, int line_size, bool put_dot);
     void draw_line(Data data1, Data data2, int line_size, bool put_dot);
+    void draw_splitX(double x);
+    void draw_splitY(double y);
     void mid_point();
     std::string filename;
     std::vector<std::vector<char>> pixels;

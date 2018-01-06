@@ -1,6 +1,7 @@
 #include "plot.h"
 #include <math.h>
 #include <stdio.h>
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include "const.h"
@@ -21,6 +22,10 @@ void PBM_Creator::plot(CsvData *csv_data) {
     Data s_axisX, e_axisX;
     Data s_axisY, e_axisY;
     int split;
+    double x_span;
+    double y_span;
+    double min_x = csv_data->getMin_x();
+    double min_y = csv_data->getMin_y();
     //出力ファイルの名前を設定する
     filename += csv_data->getFileName();
     //.csvを.pbmに置き換え
@@ -31,8 +36,8 @@ void PBM_Creator::plot(CsvData *csv_data) {
     dataW = csv_data->getDataWidth();
     dataH = csv_data->getDataHeight();
     //負の要素を除くためのバイアス
-    biasX = -csv_data->getMin_x();
-    biasY = -csv_data->getMin_y();
+    biasX = -min_x;
+    biasY = -min_y;
 
     //余白を計算
     if (biasX < 0 && -biasX * width / dataW > DEF_MARGIN) {
@@ -47,6 +52,7 @@ void PBM_Creator::plot(CsvData *csv_data) {
     }
 
     cout << "output pbm file: " << filename << endl;
+    //それぞれの点を結ぶ
     int i;
     for (i = 0; i < csv_data->getDataNum() - 1; i++) {
         draw_line(csv_data, i, DEF_LINE_SIZE, true);
@@ -70,6 +76,17 @@ void PBM_Creator::plot(CsvData *csv_data) {
     draw_line(s_axisX, e_axisX, DEF_AXIS_SIZE, false);
     // y軸を引く
     draw_line(s_axisY, e_axisY, DEF_AXIS_SIZE, false);
+
+    x_span = getSpan(dataW);
+    y_span = getSpan(dataH);
+    double x = ((int)(s_axisX.x / x_span)) * x_span;
+    double y = ((int)(s_axisY.y / y_span)) * y_span;
+    for (; x <= e_axisX.x; x += x_span) {
+        draw_splitX(x);
+    }
+    for (; y <= e_axisY.y; y += y_span) {
+        draw_splitY(y);
+    }
 }
 
 //テキスト形式PBMで出力
@@ -136,6 +153,23 @@ Data PBM_Creator::resize(Data data) {
     ret.x = (width - 1 - w_margin * 2) * (data.x + biasX) / dataW + w_margin;
     ret.y = (height - 1 - h_margin * 2) * (data.y + biasY) / dataH + h_margin;
     return ret;
+}
+
+double PBM_Creator::getSpan(double base) {
+    double shift;
+
+    // shiftの桁合わせ
+    for (shift = 1; base / shift < 10; shift /= 10) {
+        printf("shift1\n");
+    }
+    for (; base / shift >= 100; shift *= 10) {
+    }
+    //おおよそ10splitになるように
+    for (; base / shift < 10; shift /= 2) {
+    }
+    for (; base / shift > 10; shift *= 2) {
+    }
+    return shift;
 }
 
 void PBM_Creator::set_black(int x, int y) {
@@ -243,4 +277,20 @@ void PBM_Creator::draw_line(CsvData *csv_data, int s_index, int line_size,
     // s_indexとその次のデータを取得し線を引く
     draw_line(*csv_data->get_data(s_index), *csv_data->get_data(s_index + 1),
               line_size, put_dot);
+}
+
+void PBM_Creator::draw_splitX(double in_x) {
+    Data data = {in_x, 0};
+    data = resize(data);
+    set_black(data.x, data.y);
+    set_black(data.x, data.y + 1);
+    set_black(data.x, data.y - 1);
+}
+
+void PBM_Creator::draw_splitY(double in_y) {
+    Data data = {0, in_y};
+    data = resize(data);
+    set_black(data.x, data.y);
+    set_black(data.x + 1, data.y);
+    set_black(data.x - 1, data.y);
 }
