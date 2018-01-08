@@ -2,7 +2,10 @@
 
 #include <string>
 #include <vector>
+#include "approx.h"
 #include "csv_data.h"
+
+enum DOT_KND { DOT, CROSS };
 
 class PBM_Creator {
    public:
@@ -10,6 +13,7 @@ class PBM_Creator {
     ~PBM_Creator();
     void plot(CsvData* csv_data);
     void overwrite(CsvData* csv_data);
+    void overwrite(Approximation* appro);
     void output_P1();
     void output_P4();
     int getWidth() { return width; }
@@ -22,8 +26,11 @@ class PBM_Creator {
     void set_white(int x, int y);
     void dot(int x, int y, int size);
     void dot(Data data, int size);
-    void draw_line(CsvData* csv_data, int s_index, int line_size, bool put_dot);
-    void draw_line(Data data1, Data data2, int line_size, bool put_dot);
+    void cross(int x, int y, int size);
+    void draw_line(CsvData* csv_data, int s_index, int line_size, int dot_size,
+                   int dot_knd);
+    void draw_line(Data data1, Data data2, int line_size, int dot_size,
+                   int dot_knd);
     void draw_splitX(double x, int count);
     void draw_splitY(double y, int count);
     void draw_string(const char* str, int x, int y);

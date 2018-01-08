@@ -2,14 +2,14 @@
 
 #define PI 3.1415926535897832384626433832795
 
-typedef struct Matrix {
+struct Matrix {
     // w列
     int w;
     // h行
     int h;
     //ベクトル本体
     double** v;
-} Matrix;
+};
 
 // h行, w列の2次元ベクトルのメモリを確保する.
 Matrix* Matrix_Alloc(int w, int h);

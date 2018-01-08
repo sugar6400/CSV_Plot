@@ -1,4 +1,4 @@
-#include "plot.h"
+#include "pbm.h"
 #include <math.h>
 #include <stdio.h>
 #include <algorithm>
@@ -56,7 +56,7 @@ void PBM_Creator::plot(CsvData *csv_data) {
     //それぞれの点を結ぶ
     int i;
     for (i = 0; i < csv_data->getDataNum() - 1; i++) {
-        draw_line(csv_data, i, DEF_LINE_SIZE, true);
+        draw_line(csv_data, i, DEF_LINE_SIZE, DATA_POINT_SIZE, DOT);
     }
     //終点に点を打つ
     dot(resize(*csv_data->get_data(i)), DATA_POINT_SIZE);
@@ -82,9 +82,9 @@ void PBM_Creator::plot(CsvData *csv_data) {
     e_axisY.y = -biasY + dataH + y_span;
 
     // x軸を引く
-    draw_line(s_axisX, e_axisX, DEF_AXIS_SIZE, false);
+    draw_line(s_axisX, e_axisX, DEF_AXIS_SIZE, 0, DOT);
     // y軸を引く
-    draw_line(s_axisY, e_axisY, DEF_AXIS_SIZE, false);
+    draw_line(s_axisY, e_axisY, DEF_AXIS_SIZE, 0, DOT);
 
     //軸にメモリをつける
     double x = ((int)(s_axisX.x / x_span)) * x_span;
@@ -111,10 +111,26 @@ void PBM_Creator::overwrite(CsvData *csv_data) {
     //それぞれの点を結ぶ
     int i;
     for (i = 0; i < csv_data->getDataNum() - 1; i++) {
-        draw_line(csv_data, i, DEF_LINE_SIZE, true);
+        draw_line(csv_data, i, DEF_LINE_SIZE, APPRO_POINT_SIZE, CROSS);
     }
     //終点に点を打つ
     dot(resize(*csv_data->get_data(i)), DATA_POINT_SIZE);
+}
+
+void PBM_Creator::overwrite(Approximation *appro) {
+    Data prev_data;
+    Data now_data;
+    //それぞれの点を結ぶ
+    double x = -dataW;
+    prev_data.x = x;
+    prev_data.y = appro->approx_func(x);
+    for (; x < dataW; x += dataW / 20) {
+        now_data.x = x;
+        now_data.y = appro->approx_func(x);
+        draw_line(prev_data, now_data, DEF_APPRO_LINE_SIZE, APPRO_POINT_SIZE,
+                  CROSS);
+        prev_data = now_data;
+    }
 }
 
 //テキスト形式PBMで出力
@@ -233,17 +249,33 @@ void PBM_Creator::dot(int x, int y, int size) {
 
 void PBM_Creator::dot(Data data, int size) { dot(data.x, data.y, size); }
 
-void PBM_Creator::draw_line(Data data1, Data data2, int line_size,
-                            bool put_dot) {
+void PBM_Creator::cross(int x, int y, int size) {
+    int dx, dy;
+    //十字
+    for (dx = -size / 2; dx <= size / 2; dx++) {
+        set_black(x + dx, y);
+    }
+    for (dy = -size / 2; dy <= size / 2; dy++) {
+        set_black(x, y + dy);
+    }
+}
+
+void PBM_Creator::draw_line(Data data1, Data data2, int line_size, int dot_size,
+                            int dot_knd) {
     bool xy_swapped;
 
     //データの正規化
     data1 = resize(data1);
     data2 = resize(data2);
 
-    if (put_dot) {
+    if (dot_size > 0) {
         //始点に点を打つ
-        dot(data1.x, data1.y, DATA_POINT_SIZE);
+        switch (dot_knd) {
+            case DOT:
+                dot(data1.x, data1.y, dot_size);
+            case CROSS:
+                cross(data1.x, data1.y, dot_size);
+        }
     }
 
     //初期設定
@@ -311,10 +343,10 @@ void PBM_Creator::draw_line(Data data1, Data data2, int line_size,
 
 // xを基準にソートされたデータをもとに線を描く
 void PBM_Creator::draw_line(CsvData *csv_data, int s_index, int line_size,
-                            bool put_dot) {
+                            int dot_size, int dot_knd) {
     // s_indexとその次のデータを取得し線を引く
     draw_line(*csv_data->get_data(s_index), *csv_data->get_data(s_index + 1),
-              line_size, put_dot);
+              line_size, dot_size, dot_knd);
 }
 
 // X軸目盛を描く

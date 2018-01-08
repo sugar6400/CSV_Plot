@@ -17,4 +17,4 @@ class Approximation {
     Matrix* X;
     Matrix* Y;
     Matrix* result;
-}
+};
