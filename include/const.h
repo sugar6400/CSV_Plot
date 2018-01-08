@@ -12,7 +12,7 @@ static const int DEF_MARGIN = 80;
 
 //デフォルトの点のサイズ
 static const int DATA_POINT_SIZE = 8;
-//
+//デフォルトの近似曲線の点サイズ
 static const int APPRO_POINT_SIZE = 6;
 //デフォルトの線サイズ
 static const int DEF_LINE_SIZE = 3;
