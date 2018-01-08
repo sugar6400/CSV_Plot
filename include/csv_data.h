@@ -2,13 +2,13 @@
 
 #include <vector>
 
-// 1轤ｹ縺ｮ繝?繝ｼ繧ｿ
+// 1点のデータ
 struct Data {
     double x;
     double y;
 };
 
-// CSV縺九ｉ隱ｭ縺ｿ霎ｼ繧薙□繝?繝ｼ繧ｿ
+// CSVから読み込んだデータ
 class CsvData {
    public:
     CsvData();
@@ -28,7 +28,7 @@ class CsvData {
 
    private:
     char* filename;
-    //繝?繝ｼ繧ｿ繝ｪ繧ｹ繝?
+    //データリスト
     std::vector<Data> data;
     double max_x, max_y;
     double min_x, min_y;

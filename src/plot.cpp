@@ -107,6 +107,16 @@ void PBM_Creator::plot(CsvData *csv_data) {
     draw_font('0', 0.0, 0.0, -4, -12);
 }
 
+void PBM_Creator::overwrite(CsvData *csv_data) {
+    //それぞれの点を結ぶ
+    int i;
+    for (i = 0; i < csv_data->getDataNum() - 1; i++) {
+        draw_line(csv_data, i, DEF_LINE_SIZE, true);
+    }
+    //終点に点を打つ
+    dot(resize(*csv_data->get_data(i)), DATA_POINT_SIZE);
+}
+
 //テキスト形式PBMで出力
 void PBM_Creator::output_P1() {
     int x, y;

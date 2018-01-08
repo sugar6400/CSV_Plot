@@ -9,6 +9,7 @@ class PBM_Creator {
     PBM_Creator(int width, int height);
     ~PBM_Creator();
     void plot(CsvData* csv_data);
+    void overwrite(CsvData* csv_data);
     void output_P1();
     void output_P4();
     int getWidth() { return width; }
