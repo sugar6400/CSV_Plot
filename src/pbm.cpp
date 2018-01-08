@@ -121,10 +121,11 @@ void PBM_Creator::overwrite(Approximation *appro) {
     Data prev_data;
     Data now_data;
     //それぞれの点を結ぶ
-    double x = -dataW;
+    double x = -biasX - dataW / DEF_APPRO_NUM * 5;  // 5点分左から
     prev_data.x = x;
     prev_data.y = appro->approx_func(x);
-    for (; x < dataW; x += dataW / 20) {
+    // 5点分右まで
+    for (; x < dataW + dataW / DEF_APPRO_NUM * 5; x += dataW / DEF_APPRO_NUM) {
         now_data.x = x;
         now_data.y = appro->approx_func(x);
         draw_line(prev_data, now_data, DEF_APPRO_LINE_SIZE, APPRO_POINT_SIZE,
@@ -267,6 +268,11 @@ void PBM_Creator::draw_line(Data data1, Data data2, int line_size, int dot_size,
     //データの正規化
     data1 = resize(data1);
     data2 = resize(data2);
+
+    //あまりにも画像外に出すぎている点は無視する(近似曲線用)
+    if (data1.y < -DEF_APPRO_MARGIN || data1.y > height + DEF_APPRO_MARGIN ||
+        data2.y < -DEF_APPRO_MARGIN || data2.y > height + DEF_APPRO_MARGIN)
+        return;
 
     if (dot_size > 0) {
         //始点に点を打つ
