@@ -16,7 +16,7 @@ SOURCE_NAME := $(notdir $(SOURCES))
 OBJS := $(addprefix $(OBJ_DIR)/,$(SOURCE_NAME:.cpp=.o))
 DEPENDS := $(addprefix $(DEPEND_DIR)/,$(SOURCE_NAME:.cpp=.depend))
 CC := g++
-CFLAGS :=
+CFLAGS := -static
 
 .PHONY: all
 all: $(DEPENDS) $(DEBUG)

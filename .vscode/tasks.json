@@ -10,7 +10,7 @@
             "args": [
                 // Ask msbuild to generate full paths for file names.
                 "/c",
-                "make",
+                "mingw32-make",
                 "debug"
             ],
             "options": {
@@ -28,8 +28,8 @@
                     "relative",
                     "${workspaceRoot}"
                 ],
-                "pattern":{
-					"regexp": "^(.*):(\\d+):(\\d+):\\s+(.*):\\s+(.*)$",
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(.*):\\s+(.*)$",
                     "file": 1,
                     "line": 2,
                     "column": 3,
@@ -47,7 +47,7 @@
             "args": [
                 // Ask msbuild to generate full paths for file names.
                 "/c",
-                "make",
+                "mingw32-make",
                 "release"
             ],
             "options": {
@@ -65,13 +65,13 @@
                     "relative",
                     "${workspaceRoot}"
                 ],
-                "pattern":{
-					"regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-					"file": 1,
-					"line": 2,
-					"column": 3,
-					"severity": 4,
-					"message": 5
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
                 }
             }
         },
@@ -82,7 +82,7 @@
             "args": [
                 // Ask msbuild to generate full paths for file names.
                 "/c",
-                "make",
+                "mingw32-make",
                 "debug",
                 "-n",
             ],
@@ -102,7 +102,7 @@
             "args": [
                 // Ask msbuild to generate full paths for file names.
                 "/c",
-                "make",
+                "mingw32-make",
                 "clean"
             ],
             "options": {

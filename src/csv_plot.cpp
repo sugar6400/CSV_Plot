@@ -9,13 +9,13 @@
 int main(int argc, char* argv[]) {
     CsvData csv_data;
     int approx_dim;
-    PBM_Creator pbm_creator(DEF_WIDTH, DEF_HEIGHT);
 
     if (argc != 2) {
         printf("usage: %s input.csv", argv[0]);
         getchar();
         return EXIT_FAILURE;
     }
+    PBM_Creator pbm_creator(DEF_WIDTH, DEF_HEIGHT);
 
     // csvÇì«Ç›çûÇﬁ
     if (!csv_data.load(argv[1])) {
